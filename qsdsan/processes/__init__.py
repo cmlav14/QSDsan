@@ -15,15 +15,18 @@ for license details.
 from ._aeration import *
 from ._asm1 import *
 from ._asm2d import *
+from ._CANDO import *
 
 from . import (
     _aeration,
     _asm1,
     _asm2d
+    _CANDO
     )
 
 __all__ = (
     *_aeration.__all__,
     *_asm1.__all__,
     *_asm2d.__all__,
+    *_CANDO.__all__,
            )
