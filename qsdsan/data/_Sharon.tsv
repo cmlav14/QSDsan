@@ -1,0 +1,10 @@
+ID	description	formula	particle_size	degradability	organic	measured_as	i_C	i_N	i_P	i_K	i_Mg	i_Ca	i_mass	i_charge	i_COD	i_NOD	f_BOD5_COD	f_uBOD_COD	f_Vmass_Totmass	CAS	PubChem
+S_CH3OH	Methanol	CH3OH	Soluble	Readily	TRUE	COD	0.249672305	0	0	0	0	0	0.666666667	0			0.717	0.862804	1	67-56-1	887
+X_OHO	Ordinary heterotrophic organisms		Particulate	Slowly	TRUE	COD	0.366	0.0683	0.019	0.004768	0.002964	0.0024	0.776638708	0			0.566639299	0.794	0.87		
+X_AOO	Ammonia oxidizing organisms		Particulate	Slowly	TRUE	COD	0.366	0.0683	0.019	0.004768	0.002964	0.0024	0.776638708	0			0.566639299	0.794	0.87		
+X_NOO	Nitrite oxidizing organisms		Particulate	Slowly	TRUE	COD	0.366	0.0683	0.019	0.004768	0.002964	0.0024	0.776638708	0			0.566639299	0.794	0.87		
+S_NH4	Ammonia nitrogen	NH4+	Soluble	Undegradable	FALSE	N	0	1	0	0	0	0	1.2885	0.071428571			0	0	0	7664-41-7	222
+S_NO2	Nitrite	NO2-	Soluble	Undegradable	FALSE	N	0	1	0	0	0	0	3.286142857	-0.071428571			0	0	0	14797-65-0	946
+S_NO3	Nitrate	NO3-	Soluble	Undegradable	FALSE	N	0	1	0	0	0	0	4.428928571	-0.071428571			0	0	0	14797-55-8	943
+S_N2	Dissolved dinitrogen gas	N2	Dissolved gas	Undegradable	FALSE	N	0	1	0	0	0	0	1	0			0	0	0	7727-37-9	947
+S_O2	Oxygen	O2	Dissolved gas	Undegradable	FALSE		0	0	0	0	0	0	1	0			0	0	0	7782-44-7	977

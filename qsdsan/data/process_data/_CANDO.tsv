@@ -1,0 +1,22 @@
+	S_NO3	S_NO2	S_NO	S_N2O	S_N2	S_F	S_PO4	X_DPAO	X_PP	X_PHA	X_I	
+Anaerobic_storage_X_PHA						-1	Y_PO4		-Y_PO4	1		q_PHA*(S_F/(K_S_DPAO+S_F))*((X_PP/X_DPAO)/(K_PP_DPAO+(X_PP/X_DPAO)))*(X_DPAO)
+Anaerobic_storage_X_PP_on_NO3	(-Y_PHA)/1.14	(Y_PHA)/1.14					-1		1	-Y_PHA		q_PP*(S_NO3/(K_NO3+S_NO3))*(S_PO4/(K_PO4_PP+S_PO4))*((X_PHA/X_DPAO)/(K_PHA+(X_PHA/X_DPAO)))*((K_max_DPAO-(X_PP/X_DPAO))/(K_iPP_DPAO+K_max_DPAO-(X_PP/X_DPAO)))*(X_DPAO)
+Anaerobic_storage_X_PP_on_NO2		(-Y_PHA)/.57	(Y_PHA)/.57				-1		1	-Y_PHA		q_PP*(S_NO2/(K_NO2+S_NO2))*(S_PO4/(K_PO4_PP+S_PO4))*((X_PHA/X_DPAO)/(K_PHA+(X_PHA/X_DPAO)))*((K_max_DPAO-(X_PP/X_DPAO))/(K_iPP_DPAO+K_max_DPAO-(X_PP/X_DPAO)))*(X_DPAO)
+Anaerobic_storage_X_PP_on_NO			(-Y_PHA)/.57	(Y_PHA)/.57			-1		1	-Y_PHA		q_PP*(S_NO/(K_NO+S_NO))*(S_PO4/(K_PO4_PP+S_PO4))*((X_PHA/X_DPAO)/(K_PHA+(X_PHA/X_DPAO)))*((K_max_DPAO-(X_PP/X_DPAO))/(K_iPP_DPAO+K_max_DPAO-(X_PP/X_DPAO)))*(X_DPAO)
+Anaerobic_storage_X_PP_on_N2O				(-Y_PHA)/.57	(Y_PHA)/.57		-1		1	-Y_PHA		q_PP*(S_N2O/(K_N2O+S_N2O))*(S_PO4/(K_PO4_PP+S_PO4))*((X_PHA/X_DPAO)/(K_PHA+(X_PHA/X_DPAO)))*((K_max_DPAO-(X_PP/X_DPAO))/(K_iPP_DPAO+K_max_DPAO-(X_PP/X_DPAO)))*(X_DPAO)
+Anoxic_growth_X_PP_on_NO3	(-1-Y_DPAO_NOx)/(1.14*Y_DPAO_NOx)	(1-Y_DPAO_NOx)/ (1.14*Y_DPAO_NOx)					-i_P_BM	1		(-1)/Y_DPAO_NOx		mu_DPAO1*(S_NO3/(K_NO3+S_NO3))*(S_PO4/(K_DPAO_PO4+S_PO4))*((X_PHA/X_DPAO)/(K_PHA+(X_PHA/X_DPAO)))*X_DPAO
+Anoxic_growth_X_PP_on_NO2		(-1-Y_DPAO_NOx)/(.57*Y_DPAO_NOx)	(1-Y_DPAO_NOx)/ (.57*Y_DPAO_NOx)				-i_P_BM	1		(-1)/Y_DPAO_NOx		mu_DPAO2*(S_NO2/(K_NO2+S_NO2))*(S_PO4/(K_DPAO_PO4+S_PO4))*((X_PHA/X_DPAO)/(K_PHA+(X_PHA/X_DPAO)))*X_DPAO
+Anoxic_growth_X_PP_on_NO			(-1-Y_DPAO_NOx)/(.57*Y_DPAO_NOx)	(1-Y_DPAO_NOx)/ (.57*Y_DPAO_NOx)			-i_P_BM	1		(-1)/Y_DPAO_NOx		mu_DPAO3*(S_NO/(K_NO+S_NO))*(S_PO4/(K_DPAO_PO4+S_PO4))*((X_PHA/X_DPAO)/(K_PHA+(X_PHA/X_DPAO)))*X_DPAO
+Anoxic_growth_X_PP_on_N2O				(-1-Y_DPAO_NOx)/(.57*Y_DPAO_NOx)	(1-Y_DPAO_NOx)/ (.57*Y_DPAO_NOx)		-i_P_BM	1		(-1)/Y_DPAO_NOx		mu_DPAO4*(S_N2O/(K_N2O+S_N2O))*(S_PO4/(K_DPAO_PO4+S_PO4))*((X_PHA/X_DPAO)/(K_PHA+(X_PHA/X_DPAO)))*X_DPAO
+Anoxic_endogenous_respiration_on_NO3	(-1-f_1)/1.14	(1-f_1)/1.14					i_P_BM-i_P_XI*f_1	-1			f_1	b_DPAO*(S_NO3/(K_NOx+S_NO3))*X_DPAO
+Anoxic_endogenous_respiration_on_NO2		(-1-f_1)/.57	(1-f_1)/.57				i_P_BM-i_P_XI*f_1	-1			f_1	b_DPAO*(S_NO2/(K_NOx+S_NO2))*X_DPAO
+Anoxic_endogenous_respiration_on_NO			(-1-f_1)/.57	(1-f_1)/.57			i_P_BM-i_P_XI*f_1	-1			f_1	b_DPAO*(S_NO/(K_NOx+S_NO))*X_DPAO
+Anoxic_endogenous_respiration_on_N2O				(-1-f_1)/.57	(1-f_1)/.57		i_P_BM-i_P_XI*f_1	-1			f_1	b_DPAO*(S_N2O/(K_NOx+S_N2O))*X_DPAO
+Anoxic_respiration_X_PP_on_NO3							1		-1			b_PP*(S_NO3/(K_NOx+S_NO3))*X_PP
+Anoxic_respiration_X_PP_on_NO2							1		-1			b_PP*(S_NO2/(K_NOx+S_NO2))*X_PP
+Anoxic_respiration_X_PP_on_NO							1		-1			b_PP*(S_NO/(K_NOx+S_NO))*X_PP
+Anoxic_respiration_X_PP_on_N2O							1		-1			b_PP*(S_N2O/(K_NOx+S_N2O))*X_PP
+Anoxic_respiration_X_PHA_on_NO3	-1/1.14	1/1.14								-1		b_PHA*(S_NO3/(K_NOx+S_NO3))*X_PHA
+Anoxic_respiration_X_PHA_on_NO2		-1/.57	1/.57							-1		b_PHA*(S_NO2/(K_NOx+S_NO2))*X_PHA
+Anoxic_respiration_X_PHA_on_NO			-1/.57	1/.57						-1		b_PHA*(S_NO/(K_NOx+S_NO))*X_PHA
+Anoxic_respiration_X_PHA_on_N2O				-1/.57	1/.57					-1		b_PHA*(S_N2O/(K_NOx+S_N2O))*X_PHA

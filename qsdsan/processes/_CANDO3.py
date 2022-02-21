@@ -10,46 +10,60 @@ for license details.
 
 from thermosteam.utils import chemicals_user
 from thermosteam import settings
-from qsdsan import Components, Processes, _pk
-from ..utils import ospath, data_path, save_pickle, load_pickle
+from qsdsan import Component, Components, Processes, _pk, Process   # added `Component` and `Process` to the import
+from qsdsan.utils import ospath, data_path, save_pickle, load_pickle
 
-__all__ = ('load_CANDO_cmps', 'CANDO')
+__all__ = ('load_CANDO3_cmps', 'CANDO3')
 
-_path = ospath.join(data_path, 'process_data/_CANDO.tsv')
-_path_cmps = ospath.join(data_path, '_CANDO_cmps.pckl')
+_path = ospath.join(data_path, 'process_data/_CANDO3.tsv')
+_path_cmps = ospath.join(data_path, '_CANDO3_cmps.pckl')
 _load_components = settings.get_default_chemicals
 
 ############# Components with default notation #############
-def _create_CANDO_cmps(pickle=False):
+def _create_CANDO3_cmps(pickle=False):
     cmps = Components.load_default()
 
-    S_NO3 = cmps.S_NO3.copy('S_NO3')
-    S_NO3.description = 'Nitrate'
+    # S_NO3 = cmps.S_NO3.copy('S_NO3')
+    # S_NO3.description = 'Nitrate'
 
-    S_NO2 = cmps.S_NO2.copy('S_NO2')
-    S_NO2.description = 'Nitrite'
+    # S_NO2 = cmps.S_NO2.copy('S_NO2')
+    # S_NO2.description = 'Nitrite'
+    
+    # S_NH4 = cmps.S_NH4.copy('S_NH4')
+    # S_NH4.description = 'Ammonia Nitrogen'
 
-    S_NO = cmps.S_NO.copy('S_NO')
-    S_NO.description = 'Nitrogen Oxide Nitrogen'
+    # S_O2 = cmps.S_O2.copy('S_O2')
+    # S_O2.description = 'Oxygen'
+
+    # This component is not in the default set and needs to be create from scratch
+    # S_NO = cmps.S_NO.copy('S_NO')
+    # S_NO.description = 'Nitrogen Oxide Nitrogen'
+    S_NO = Component.from_chemical('S_NO', chemical='NO', description='Nitric oxide',
+                                   measured_as='N',  particle_size='Dissolved gas', 
+                                   organic=False, degradability='Undegradable')
  
-    S_N2O = cmps.S_N2O.copy('S_N2O')
-    S_N2O.description = 'Nitrous Oxide Nitrogen'
-   
-    S_N2 = cmps.S_N2.copy('S_N2')
-    S_N2.description = 'Nitrogen'
+    # This component is not in the default set and needs to be create from scratch
+    # S_N2O = cmps.S_N2O.copy('S_N2O')
+    # S_N2O.description = 'Nitrous Oxide Nitrogen'
+
+    S_N2O = Component.from_chemical('S_N2O', chemical='N2O', description='Nitrous oxide',
+                                   measured_as='N',  particle_size='Dissolved gas', 
+                                   organic=False, degradability='Undegradable')
+    # S_N2 = cmps.S_N2.copy('S_N2')
+    # S_N2.description = 'Nitrogen'
     
-    S_S = cmps.S_F.copy('S_S')
-    S_S.description = 'Readily Degradable Substrate'
+    # S_F = cmps.S_F.copy('S_F')
+    # S_F.description = 'Readily Degradable Substrate'
 
-    S_F = cmps.S_F.copy('S_F')
-    S_F.description = 'Readily Degradable Substrate'
-
-    S_PO4 = cmps.S_PO4.copy('S_PO4')
-    S_PO4.description = 'Phosphate' 
-
-    X_DPAO = cmps.X_DPAO.copy('X_DPAO')
-    X_DPAO.description = 'Denitrifying Phosphorus Accumilating Organismss'
+    # S_PO4 = cmps.S_PO4.copy('S_PO4')
+    # S_PO4.description = 'Phosphate' 
     
+    # S_Ac = cmps.S_Ac.copy('S_Ac')
+    # S_Ac.description = 'Acetate'
+    
+    S_ALK = cmps.S_CO3.copy('S_ALK') 
+    S_ALK.description = 'Alkalinity'
+
     X_PHA = cmps.X_PAO_PHA.copy('X_PHA')
     X_PHA.description = 'polyhydroxyalkanoates'
     
@@ -58,29 +72,42 @@ def _create_CANDO_cmps(pickle=False):
     
     X_I = cmps.X_U_Inf.copy('X_I')
     X_I.description = 'Residual Inert Biomass'
-
+    
+    X_H = cmps.X_OHO.copy('X_H')
+    X_H.description = 'Heterotrophic Biomass'
+    
+    # X_PAO = cmps.X_PAO.copy('X_PAO')
+    # X_PAO.description = 'Phosphate Accumilating Organisms'
+    
+    X_S = cmps.X_B_Subst.copy('X_S')
+    X_S.description = 'Slowly Biodegradable Substrate'
 
 
     # add water for the creation of WasteStream objects
-    cmps_CANDO = Components([S_NO3, S_NO2, S_NO, S_N2O, S_N2, S_F, S_PO4,
-                            X_DPAO, X_PHA, X_PP, X_I,
-                            cmps.H2O])
-    cmps_CANDO.compile()
+    # Basically, if you don't need to make any modification to the component (i.e.,
+    # it is exactly the component you need), you can skip the copying part.
+    cmps_CANDO3 = Components([cmps.S_NO3, cmps.S_NO2, cmps.S_NH4, cmps.S_O2, 
+                              S_NO, S_N2O, cmps.S_N2, cmps.S_F, cmps.S_PO4, 
+                              cmps.S_Ac, S_ALK, X_PHA, X_PP, X_I, X_H, 
+                              cmps.X_PAO, X_S, cmps.H2O])
+    cmps_CANDO3.compile()
 
     if pickle:
-        save_pickle(cmps_CANDO, _path_cmps)
-    return cmps_CANDO
+        save_pickle(cmps_CANDO3, _path_cmps)
+    return cmps_CANDO3
 
 
 
-#_create_CANDO_cmps(True)
+#_create_asm1_cmps(True)
+
+# _create_CANDO3_cmps(True)
 
 
-def load_CANDO_cmps():
+def load_CANDO3_cmps():
     if _pk:
         return load_pickle(_path_cmps)
     else:
-        return _create_CANDO_cmps(pickle=False)
+        return _create_CANDO3_cmps(pickle=False)
 
 
 
@@ -138,7 +165,7 @@ def load_CANDO_cmps():
 #     )
 
 @chemicals_user
-class CANDO(Processes):
+class CANDO3(Processes):
     '''
     Activated Sludge Model No. 1 in original notation. [1]_, [2]_
     Parameters
@@ -205,46 +232,67 @@ class CANDO(Processes):
         https://doi.org/10.2166/9781780401164.
     '''
 
-    _params = ('Y_PO4','Y_PHA', 'Y_DPAO_NOx','i_P_BM','i_P_XI', 'f_1','q_PSA','K_S_DPAO',
-               'K_PP_DPAO','q_PP','K_PO4_PP','K_PHA','K_max_DPAO','K_iPP_DPAO',
-               'K_DPAO_PO4','mu_DPAO1','mu_DPAO2','mu_DPAO3','mu_DPAO4','K_NO3','K_NO2',
-               'K_NO2','K_NO','K_N2O','b_DPAO','b_PP','b_PHA','K_NOx')
+    _params = ('k_H','k_X','mu_H','b_H','nu_H1','nu_H2','nu_H3','nu_H4','k_OH1','k_OH2',
+               'k_OH3','k_OH4','k_OH5','k_S1','k_S2','k_S3','k_S4','k_S5',
+               'k_HB_NO3', 'k_HB_NO2', 'k_HB_NO', 'k_HB_N2O', 'k_HB_I1_NO',
+               'k_HB_I2_NO','k_HB_I3_NO','Y_PHA','Y_PAO','Y_PO4','f_XI','Y_H','f_1','i_NBM','i_NXS','i_PBM','i_NXI',
+               'b_PAO','b_PP','b_PHA','k_PP','q_PHA','k_A','k_ALK','q_PP','k_PS',
+               'k_MAX','k_P','k_IPP','k_O2','k_NO3','k_PHA','n_NO3','mu_PAO','k_NH4')
 
-
-
-    def __new__(cls, components=None, Y_PO4=0.3, Y_PHA=0.2, Y_DPAO_NOx=0.5,
-                i_P_BM=0.02,
-                i_P_XI=0.01,f_1=.2,q_PHA=.53,K_S_DPAO=10,K_PP_DPAO=.05,q_PP=.0375,
-                K_PO4_PP=0.2, K_PHA=0.1,K_max_DPAO=0.2,K_iPP_DPAO=.05, 
-                K_DPAO_PO4=0.05,mu_DPAO1=0.07, mu_DPAO2=0.019,mu_DPAO3=.142,
-                mu_DPAO4=.142,
-                K_NO3=.251,K_NO2=.81,K_NO=.0021,K_N2O=.0052,b_DPAO=.005,
-                b_PP=.005,b_PHA=.005,K_NOx=.5,
+    def __new__(cls, components=None, k_H=0.125, k_X=1, mu_H=0.26,
+                b_H=0.017,nu_H1=.28,nu_H2=.16,nu_H3=.35,nu_H4=.35,
+                k_OH1=.1, k_OH2=.1, k_OH3=.1, k_OH4=.1, k_OH5=.1,
+                k_S1=20,k_S2=20,k_S3=20,k_S4=20,k_S5=40,k_HB_NO3=.2,
+                k_HB_NO2=.2,k_HB_NO=.05,k_HB_N2O=.05,k_HB_I1_NO=.5,
+                k_HB_I2_NO=.3,k_HB_I3_NO=.075,Y_PHA=.625,Y_PAO=.2,Y_PO4=.3,f_XI=.1,Y_H=.625,i_NXI=.02,
+                f_1=.1,i_NBM=.07,i_NXS=.02,i_PBM=.07,
+                b_PAO =.2,b_PP=.2,b_PHA=.2,k_PP=.01, 
+                q_PHA=3.0,k_A=4.0,k_ALK=0.1,q_PP=1.5,k_PS=0.2,k_MAX=0.34,k_P=.01,
+                k_IPP=0.02,k_O2=0.2, k_NO3=0.5,k_PHA=0.01,n_NO3=.6,mu_PAO=1,k_NH4=.05,
                 fr_SS_COD=0.75, path=None, **kwargs):
         if not path: path = _path
         
-
-       
         cmps = _load_components(components)
         cmps.X_I.i_mass  = fr_SS_COD
+
         cmps.refresh_constants()
         
+        # Added 'P' to conserved_for
         self = Processes.load_from_file(path,
-                                        conserved_for=('COD', 'charge', 'N'),
+                                        conserved_for=('COD', 'charge', 'N', 'P'),
                                         parameters=cls._params,
                                         components=cmps,
-                                        compile=True)
+                                        compile=False)
+        
+        if path == _path:
+            _p12 = Process('anox_storage_PP',
+                           'S_PO4 + [Y_PHA]X_PHA + [?]S_NO3 -> X_PP + [?]S_N2 + [?]S_NH4 + [?]S_ALK',
+                           components=cmps,
+                           ref_component='X_PP',
+                           rate_equation='q_PP * S_O2/(k_O2+S_O2) * S_PO4/(k_PS+S_PO4) * S_ALK/(k_ALK+S_ALK) * (X_PHA/X_PAO)/(k_PHA+X_PHA/X_PAO) * (k_MAX-X_PP/X_PAO)/(k_IPP+k_MAX-X_PP/X_PAO) * X_PAO * n_NO3 * k_O2/S_O2 * S_NO3/(k_NO3+S_NO3)',
+                           parameters=('Y_PHA', 'q_PP', 'k_O2', 'k_PS', 'k_ALK', 'k_PHA', 'n_NO3', 'k_IPP', 'k_NO3'),
+                           conserved_for=('COD', 'N', 'P', 'NOD', 'charge'))
 
-        self.set_parameters(Y_PO4=Y_PO4,Y_PHA=Y_PHA,Y_DPAO_NOx=Y_DPAO_NOx,
-                            i_P_BM=i_P_BM,i_P_XI=i_P_XI,f_1=f_1,q_PHA=q_PHA,
-                            K_S_DPAO=K_S_DPAO,K_PP_DPAO=K_PP_DPAO,q_PP=q_PP,
-                            K_PO4_PP=K_PO4_PP,K_PHA=K_PHA,K_max_DPAO=K_max_DPAO,
-                            K_iPP_DPAO=K_iPP_DPAO,K_DPAO_PO4=K_DPAO_PO4,mu_DPAO1=mu_DPAO1,
-                            mu_DPAO2=mu_DPAO2,mu_DPAO3=mu_DPAO3,mu_DPAO4=mu_DPAO4,
-                            K_NO3=K_NO3,K_NO2=K_NO2,K_NO=K_NO,K_N2O=K_N2O,
-                            b_DPAO=b_DPAO,b_PP=b_PP,b_PHA=b_PHA,K_NOx=K_NOx,
+            _p14 = Process('PAO_anox_growth',
+                           '[1/Y_PAO]X_PHA + [?]S_NO3 + [?]S_PO4 -> X_PAO + [?]S_N2 + [?]S_NH4  + [?]S_ALK',
+                           components=cmps,
+                           ref_component='X_PAO',
+                           rate_equation='mu_PAO * S_O2/(k_O2 + S_O2) * S_NH4/(k_NH4 + S_NH4) * S_PO4/(k_P + S_PO4) * S_ALK/(k_ALK + S_ALK) * (X_PHA/X_PAO)/(k_PHA + X_PHA/X_PAO) * X_PAO * n_NO3 * k_O2/S_O2 * S_NO3/(k_NO3 + S_NO3)',
+                           parameters=('Y_PAO', 'mu_PAO', 'k_O2', 'k_NH4', 'k_P', 'k_ALK', 'k_PHA', 'n_NO3', 'k_NO3'),
+                           conserved_for=('COD', 'N', 'P', 'NOD', 'charge'))
+            self.extend([_p12, _p14])
+
+        self.compile()
+
+        self.set_parameters(k_H=k_H,k_X=k_X,mu_H=mu_H,b_H=b_H,nu_H1=nu_H1,nu_H2=nu_H2,
+                            nu_H3=nu_H3,nu_H4=nu_H4,k_OH1=k_OH1,k_OH2=k_OH2,k_OH3=k_OH3,
+                            k_OH4=k_OH4,k_OH5=k_OH5,k_S1=k_S1,k_S2=k_S2,k_S3=k_S3,k_S4=k_S4,
+                            k_S5=k_S5,k_HB_NO3=k_HB_NO3,k_HB_NO2=k_HB_NO2,k_HB_NO=k_HB_NO,
+                            k_HB_N2O=k_HB_N2O,k_HB_I1_NO=k_HB_I1_NO,k_HB_I2_NO=k_HB_I2_NO,
+                            k_HB_I3_NO=k_HB_I3_NO,Y_PHA=Y_PHA,Y_PAO=Y_PAO,Y_PO4=Y_PO4,f_XI=f_XI,
+                            Y_H=Y_H,b_PAO=b_PAO,b_PP=b_PP,b_PHA=b_PHA,k_PP=k_PP,q_PHA=q_PHA,
+                            k_A=k_A,k_ALK=k_ALK,q_PP=q_PP,k_PS=k_PS,k_MAX=k_MAX,k_P=k_P,
+                            k_IPP=k_IPP,k_O2=k_O2,k_NO3=k_NO3,k_PHA=k_PHA,n_NO3=n_NO3,
+                            mu_PAO=mu_PAO,k_NH4=k_NH4,f_1=f_1,i_NBM=i_NBM,i_NXS=i_NXS,i_PBM=i_PBM,i_NXI=i_NXI,
                             **kwargs)
         return self
-
-                            
- 

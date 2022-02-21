@@ -1,0 +1,12 @@
+ID	description	formula	particle_size	degradability	organic	measured_as	i_C	i_N	i_P	i_K	i_Mg	i_Ca	i_mass	i_charge	i_COD	i_NOD	f_BOD5_COD	f_uBOD_COD	f_Vmass_Totmass	CAS	PubChem
+S_A	Fermentable soluble organic matters		Soluble	Readily	TRUE	COD	0.32	0.03	0.01	0	0	0	0.502512563	0			0.717	0.862804	1		
+X_PHA	Poly-β-hydroxyalkanoates in phosphorus accumulating organisms		Particulate	Slowly	TRUE	COD	0.333333333	0	0	0	0	0	0.597222222	0			0.579876434	0.862804	1		
+X_I	Undegradable particulate compound originating from the influent		Particulate	Undegradable	TRUE	COD	0.32	0.05	0.01	0	0	0	0.555555556	0			0	0	1		
+X_PP	High molecular weight poly-phosphate in phosphorus accumulating organisms	(K0.33Mg0.33PO3)n	Particulate	Undegradable	FALSE	P	0	0	1	0.419354839	0.080891255	0	3.230143011	-0.032258065			0	0	0		
+S_NO2	Nitrite	NO2-	Soluble	Undegradable	FALSE	N	0	1	0	0	0	0	3.286142857	-0.071428571			0	0	0	14797-65-0	946
+S_NO3	Nitrate	NO3-	Soluble	Undegradable	FALSE	N	0	1	0	0	0	0	4.428928571	-0.071428571			0	0	0	14797-55-8	943
+S_PO4	Orthophosphate, assumed 50% H2PO4-, 50% HPO4-2	H3P2O8-3	Soluble	Undegradable	FALSE	P	0	0	1	0	0	0	3.115	-0.048			0	0	0		
+S_N2	Dissolved dinitrogen gas	N2	Dissolved gas	Undegradable	FALSE	N	0	1	0	0	0	0	1	0			0	0	0	7727-37-9	947
+S_NO	Nitrogen oxide	NO	Soluble	Undegradable	FALSE	N	0	1	0	0	0	0	2.1428571	0			0	0	0	10102-43-9	145068
+S_N2O	Nitrous oxide	N2O	Soluble	Undegradable	FALSE	N	0	1	0	0	0	0	3.2857142	0			0	0	0	10024-97-2	948
+X_DPAO	Denitrifying phosphorus accumulating organisms		Particulate	Slowly	TRUE	COD	0.366	0.0683	0.019	0.004768	0.002964	0.0024	0.776638708	0			0.566639299	0.794	0.87		

@@ -1,0 +1,6 @@
+	S_NH4	S_NO2	S_NO3	S_O2	S_N2	X_AOB	X_NOB	X_HET	S_CH3OH	
+Ammonium Oxidation	-1/Y_1	(1/Y_1)-n_amm		-(-1+(1.5/Y_1)-(h_amm/4)+(o_amm/2)-(.75*n_amm))		1				mu_amm_max*((S_NH4/(S_NH4+K_amm_nh3))*(S_O2/(K_amm_O2+S_O2))*(K_I_amm_HNO2/(K_I_amm_HNO2+S_NO2)))*X_AOB
+Nitrite Oxidation	-n_nit	-1/Y_2	1/Y_2	-(-1+(1.5/Y_1)-(h_nit/4)+(o_nit/2)-(.75*n_nit))			1			mu_nit_max*((S_NO2/(S_NO2+K_nit_HNO2))*(S_O2/(K_nit_O2+S_O2)))*X_NOB
+Denitrification nitrite	-n_het	-1/Y_3			.5*Y_3			1	-((2/3)+(.5/Y_3)+(h_het/6)-(o_het/3)-(n_het/2))	mu_dNO2_max*((S_NO2/(S_NO2+K_dNO2_NO2))*(S_CH3OH/(K_hetan_CH3OH+S_CH3OH))*(S_NO2/(S_NO3+S_NO2))*(K_I_O2/(K_I_O2+S_O2)))*X_HET
+Dentirification nitrate	-n_het		-1/Y_4		.5*Y_4			1	-((2/3)+(5/6*Y_3)+(h_het/6)-(o_het/3)-(n_het/2))	mu_dNO3_max*((S_NO3/(S_NO3+K_dNO3_NO3))*(S_CH3OH/(K_hetan_CH3OH+S_CH3OH))*(S_NO3/(S_NO3+S_NO2))*(K_I_O2/(K_I_O2+S_O2)))*X_HET
+methanol oxidation	-n_het			-(-1+(1.5/Y_1)-(h_het/4)+(o_het/2)-(.75*n_het))				1	(-1/Y_5)	mu_met_max*((S_NO2/(S_NO2+K_nit_HNO2))*(S_O2/(K_nit_O2+S_O2)))*X_HET

@@ -13,74 +13,59 @@ from thermosteam import settings
 from qsdsan import Components, Processes, _pk
 from ..utils import ospath, data_path, save_pickle, load_pickle
 
-__all__ = ('load_CANDO_cmps', 'CANDO')
+__all__ = ('load_Sharon_cmps', 'Sharon')
 
-_path = ospath.join(data_path, 'process_data/_CANDO.tsv')
-_path_cmps = ospath.join(data_path, '_CANDO_cmps.pckl')
+_path = ospath.join(data_path, 'process_data/_Sharon.tsv')
+_path_cmps = ospath.join(data_path, '_Sharon_cmps.pckl')
 _load_components = settings.get_default_chemicals
 
 ############# Components with default notation #############
 def _create_CANDO_cmps(pickle=False):
     cmps = Components.load_default()
-
+    
+    S_NH = cmps.S_NH4.copy('S_NH')
+    S_NH.description = 'Ammonia'
+    
     S_NO3 = cmps.S_NO3.copy('S_NO3')
     S_NO3.description = 'Nitrate'
 
     S_NO2 = cmps.S_NO2.copy('S_NO2')
     S_NO2.description = 'Nitrite'
-
-    S_NO = cmps.S_NO.copy('S_NO')
-    S_NO.description = 'Nitrogen Oxide Nitrogen'
- 
-    S_N2O = cmps.S_N2O.copy('S_N2O')
-    S_N2O.description = 'Nitrous Oxide Nitrogen'
-   
-    S_N2 = cmps.S_N2.copy('S_N2')
-    S_N2.description = 'Nitrogen'
+     
+    S_O = cmps.S_O2.copy('S_O')
+    S_O.desription = 'Oxygen'
     
-    S_S = cmps.S_F.copy('S_S')
-    S_S.description = 'Readily Degradable Substrate'
-
-    S_F = cmps.S_F.copy('S_F')
-    S_F.description = 'Readily Degradable Substrate'
-
-    S_PO4 = cmps.S_PO4.copy('S_PO4')
-    S_PO4.description = 'Phosphate' 
-
-    X_DPAO = cmps.X_DPAO.copy('X_DPAO')
-    X_DPAO.description = 'Denitrifying Phosphorus Accumilating Organismss'
+    S_CH3OH = cmps.CH3OH.copy('CH3OH')
+    S_CH3OH.description = 'Methanol'
     
-    X_PHA = cmps.X_PAO_PHA.copy('X_PHA')
-    X_PHA.description = 'polyhydroxyalkanoates'
+    X_AOB = cmps.X_AOO.copy('X_AOB')
+    X_AOB.description = 'Ammonia Oxidizing Bacteria'
     
-    X_PP = cmps.X_PAO_PP_Hi.copy('X_PP')
-    X_PP.description = 'polyphosphate biomass'
+    X_NOB = cmps.X_NOO.copy('X_NOB')
+    X_NOB.description = 'Nitrite Oxidizing Bacteria'
     
-    X_I = cmps.X_U_Inf.copy('X_I')
-    X_I.description = 'Residual Inert Biomass'
-
-
+    X_HET = cmps.X_OHO.copy('X_HET')
+    X_HET.description = 'Heterotrophic Oxidizing Bacteria'
+    
 
     # add water for the creation of WasteStream objects
-    cmps_CANDO = Components([S_NO3, S_NO2, S_NO, S_N2O, S_N2, S_F, S_PO4,
-                            X_DPAO, X_PHA, X_PP, X_I,
+    cmps_Sharon = Components([S_NH, S_NO3, S_NO2, S_O, S_CH3OH,
+                            X_AOB, X_NOB, X_HET,
                             cmps.H2O])
-    cmps_CANDO.compile()
+    cmps_Sharon.compile()
 
     if pickle:
-        save_pickle(cmps_CANDO, _path_cmps)
-    return cmps_CANDO
+        save_pickle(cmps_Sharon, _path_cmps)
+    return cmps_Sharon
 
 
+#_create_Sharon_cmps(True)
 
-#_create_CANDO_cmps(True)
-
-
-def load_CANDO_cmps():
+def load_Sharon_cmps():
     if _pk:
         return load_pickle(_path_cmps)
     else:
-        return _create_CANDO_cmps(pickle=False)
+        return _create_Sharon_cmps(pickle=False)
 
 
 
@@ -138,7 +123,7 @@ def load_CANDO_cmps():
 #     )
 
 @chemicals_user
-class CANDO(Processes):
+class Sharon(Processes):
     '''
     Activated Sludge Model No. 1 in original notation. [1]_, [2]_
     Parameters
@@ -209,24 +194,19 @@ class CANDO(Processes):
                'K_PP_DPAO','q_PP','K_PO4_PP','K_PHA','K_max_DPAO','K_iPP_DPAO',
                'K_DPAO_PO4','mu_DPAO1','mu_DPAO2','mu_DPAO3','mu_DPAO4','K_NO3','K_NO2',
                'K_NO2','K_NO','K_N2O','b_DPAO','b_PP','b_PHA','K_NOx')
+    
 
 
-
-    def __new__(cls, components=None, Y_PO4=0.3, Y_PHA=0.2, Y_DPAO_NOx=0.5,
-                i_P_BM=0.02,
-                i_P_XI=0.01,f_1=.2,q_PHA=.53,K_S_DPAO=10,K_PP_DPAO=.05,q_PP=.0375,
-                K_PO4_PP=0.2, K_PHA=0.1,K_max_DPAO=0.2,K_iPP_DPAO=.05, 
-                K_DPAO_PO4=0.05,mu_DPAO1=0.07, mu_DPAO2=0.019,mu_DPAO3=.142,
-                mu_DPAO4=.142,
-                K_NO3=.251,K_NO2=.81,K_NO=.0021,K_N2O=.0052,b_DPAO=.005,
-                b_PP=.005,b_PHA=.005,K_NOx=.5,
+    def __new__(cls, components=None, Y_1=0.15, Y_2=0.041, Y_3=0.123,Y_4=.131, Y_5=.223, 
+                n_amm=.114,n_nit=.114,n_het=.114, h_amm=.073, h_nit=.073, h_het=.325,o_amm=.325,o_nit=.325,o_het=.325,
+                mu_amm_max=2.1,mu_nit_max = 1.05,mu_dNO2_max = 1.5,mu_dNO3_max = 1.5,mu_met_max = 2.5,
+                K_amm_nh3 =.972,K_I_amm_HNO2 =8.862,K_amm_O2 = .4704,K_nit_HNO2 = .893,K_nit_O2 = .544,
+                K_dNO2_NO2 = .391,K_hetan_CH3OH = 16.672,K_I_O2 = .1008,K_dNO3_NO3 = .62,K_hetox_CH3OH = 66.656,K_het_O2 = .04,
                 fr_SS_COD=0.75, path=None, **kwargs):
         if not path: path = _path
         
-
-       
+        
         cmps = _load_components(components)
-        cmps.X_I.i_mass  = fr_SS_COD
         cmps.refresh_constants()
         
         self = Processes.load_from_file(path,
@@ -235,16 +215,13 @@ class CANDO(Processes):
                                         components=cmps,
                                         compile=True)
 
-        self.set_parameters(Y_PO4=Y_PO4,Y_PHA=Y_PHA,Y_DPAO_NOx=Y_DPAO_NOx,
-                            i_P_BM=i_P_BM,i_P_XI=i_P_XI,f_1=f_1,q_PHA=q_PHA,
-                            K_S_DPAO=K_S_DPAO,K_PP_DPAO=K_PP_DPAO,q_PP=q_PP,
-                            K_PO4_PP=K_PO4_PP,K_PHA=K_PHA,K_max_DPAO=K_max_DPAO,
-                            K_iPP_DPAO=K_iPP_DPAO,K_DPAO_PO4=K_DPAO_PO4,mu_DPAO1=mu_DPAO1,
-                            mu_DPAO2=mu_DPAO2,mu_DPAO3=mu_DPAO3,mu_DPAO4=mu_DPAO4,
-                            K_NO3=K_NO3,K_NO2=K_NO2,K_NO=K_NO,K_N2O=K_N2O,
-                            b_DPAO=b_DPAO,b_PP=b_PP,b_PHA=b_PHA,K_NOx=K_NOx,
+        self.set_parameters(Y_1=Y_1,Y_2=Y_2,Y_3=Y_3,Y_4=Y_4,Y_5=Y_5,
+                            n_amm=n_amm,n_nit=n_nit,n_het=n_het,h_amm=h_amm,
+                            h_nit=h_nit,h_het=h_het,o_amm=o_amm,o_nit=o_nit,o_het=o_het,
+                            mu_amm_max=mu_amm_max,mu_nit_max=mu_nit_max,mu_dNO2_max=mu_dNO2_max,
+                            mu_dNO3_max=mu_dNO3_max,mu_met_max=mu_met_max,K_amm_nh3=K_amm_nh3,
+                            K_I_amm_HNO2=K_I_amm_HNO2,K_amm_O2=K_amm_O2,K_nit_HNO2=K_nit_HNO2,
+                            K_nit_O2=K_nit_O2,K_dNO2_NO2=K_dNO2_NO2,K_hetan_CH3OH=K_hetan_CH3OH,
+                            K_I_O2=K_I_O2,K_dNO3_NO3=K_dNO3_NO3,K_hetox_CH3OH=K_hetox_CH3OH,K_het_O2=K_het_O2,
                             **kwargs)
         return self
-
-                            
- 
