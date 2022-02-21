@@ -18,7 +18,7 @@ from warnings import warn
 from math import floor, ceil
 import numpy as np
 import pandas as pd
-from numba import njit
+from numba import jit
 
 __all__ = ('CSTR',
            'SBR',
@@ -38,7 +38,7 @@ def _add_aeration_to_growth_model(aer, model):
 
 # %%
 
-@njit(cache=True)
+@jit(cache=True)
 def dydt_cstr_no_rxn_fixed_aer(QC_ins, dQC_ins, V_arr, Q_e_arr, _dstate, Cs):
     Q_ins = QC_ins[:, -1]
     C_ins = QC_ins[:, :-1]
@@ -48,7 +48,7 @@ def dydt_cstr_no_rxn_fixed_aer(QC_ins, dQC_ins, V_arr, Q_e_arr, _dstate, Cs):
     flow_out = Q_e_arr * Cs / V_arr
     _dstate[:-1] = flow_in - flow_out
 
-@njit(cache=True)
+@jit(cache=True)
 def dydt_cstr_no_rxn_controlled_aer(QC_ins, dQC_ins, V_arr, Q_e_arr, _dstate, Cs):
     Q_ins = QC_ins[:, -1]
     C_ins = QC_ins[:, :-1]
