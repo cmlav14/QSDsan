@@ -1,13 +1,21 @@
-	S_O2	S_F	S_NH4	S_NO2	S_NO3	S_NO	S_N2O	S_N2	X_S	X_H	X_I	S_PO4	X_PAO	X_PP	X_PHA	S_ALK	S_Ac	
-Aerobic growth of HB	((-1-Y_H)/(Y_H))	(-1)/Y_H	(-i_NBM)							1								mu_H*(S_O2/(k_OH1+S_O2))*(S_F/(k_S1+S_F))*X_H
-Anoixic growth of HB with nitrate reduction		(-1)/Y_H	(-i_NBM)	((1-Y_H)/(1.14*Y_H))	((-1-Y_H)/(1.14*Y_H))					1								mu_H*nu_H1*(k_OH2/(k_OH2+S_O2))*(S_NO3/(k_HB_NO3+S_NO3))*(S_F/(k_S2+S_F))*X_H
-Anoxic growth of HB with nitrite reduction		(-1)/Y_H	(-i_NBM)	((-1-Y_H)/(.57*Y_H))		((1-Y_H)/(.57*Y_H))				1								mu_H*nu_H2*(k_OH3/(k_OH3+S_O2))*(S_NO2/(k_HB_NO2+S_NO2))*(S_F/(k_S3+S_F))*(k_HB_I1_NO/(k_HB_I1_NO+S_NO))*X_H
-Anoixic growth of HB with NO reduction		(-1)/Y_H	(-i_NBM)			((-1-Y_H)/(.57*Y_H))	((1-Y_H)/(.57*Y_H))			1								mu_H*nu_H3*(k_OH4/(k_OH4+S_O2))*(S_NO/((k_HB_NO+S_NO+(S_NO*S_NO))/k_HB_I2_NO))*(S_F/(k_S4+S_F))*X_H
-Anoxic growth of HB with N2O reduction		(-1)/Y_H	(-i_NBM)				((-1-Y_H)/(.57*Y_H))	((1-Y_H)/(.57*Y_H))		1								mu_H*nu_H4*(k_OH5/(k_OH5+S_O2))*(S_N2O/(k_HB_N2O+S_N2O))*(S_F/(k_S5+S_F))*(k_HB_I3_NO/(k_HB_I3_NO+S_NO))*X_H
-Decay of HB			i_NBM-(i_NXI*f_1)						1-f_1	-1	f_1							b_H*X_H
-PAO_storage_PHA	(-Y_PHA)		?									Y_PO4		(-Y_PO4)	1	?	-1	q_PHA*S_Ac/(k_A+S_Ac)*S_ALK/(k_ALK+S_ALK)*(X_PP/X_PAO)/(k_PP+X_PP/X_PAO)*X_PAO
-aero_storage_PP	?		?									-1		1	(-Y_PHA)	?		q_PP*S_O2/(k_O2+S_O2)*S_PO4/(k_PS+S_PO4)*S_ALK/(k_ALK+S_ALK)*(X_PHA/X_PAO)/(k_PHA+X_PHA/X_PAO)*(k_MAX-X_PP/X_PAO)/(k_IPP+k_MAX-X_PP/X_PAO)*X_PAO
-PAO_aero_growth_PHA			?									?	1		(-1)/Y_PAO	?		mu_PAO*S_O2/(k_O2+S_O2)*S_NH4/(k_NH4+S_NH4)*S_PO4/(k_P+S_PO4)*S_ALK/(k_ALK+S_ALK)*(X_PHA/X_PAO)/(k_PHA+X_PHA/X_PAO)*X_PAO
-PAO_lysis			?						1-f_XI		f_XI	?	-1			?		b_PAO*X_PAO*S_ALK/(k_ALK+S_ALK)
-PP_lysis			?									1		-1		?		b_PP*X_PP*S_ALK/(k_ALK+S_ALK)
-PHA_lysis			?												-1	?	1	b_PHA*X_PHA*S_ALK/(k_ALK+S_ALK)
+	S_NO3	S_NO2	S_NO	S_N2O	S_N2	S_Ac	S_ALK	S_PO4	X_H	X_I	X_S	X_PHA	X_PAO	X_PP	
+Anoxic growth of HB with nitrate and Sa	((-1-Y_H)/(1.14*Y_H))	((1-Y_H)/(1.14*Y_H))				(-1)/Y_H			1						mu1_hb_ss*(S_Ac/(k_S1+S_Ac))*(S_NO3/(k_NO3+S_NO3))*(k_I1_NO2/(k_I1_NO2+S_NO2))*X_H
+Anoxic growth of HB with Nitrite and Sa		((-1-Y_H)/(.57*Y_H))	((1-Y_H)/(.57*Y_H))			(-1)/Y_H			1						mu2_hb_ss*(S_Ac/(k_S2+S_Ac))*(S_NO2/(k_NO2+S_NO2))*(k_I2_NO2/(k_I2_NO2+S_NO2))*X_H
+Anoxic growth of HB with NO and Sa			((-1-Y_H)/(.57*Y_H))	((1-Y_H)/(.57*Y_H))		(-1)/Y_H			1						mu3_hb_ss*(S_Ac/(k_S3+S_Ac))*(S_NO/(k_NO+S_NO))*(k_I3_NO2/(k_I3_NO2+S_NO2))*X_H
+Anoxic growth of HB with N2O and Sa				((-1-Y_H)/(.57*Y_H))	((1-Y_H)/(.57*Y_H))	(-1)/Y_H			1						mu4_hb_ss*(S_Ac/(k_S4+S_Ac))*(S_N2O/(k_N2O+S_N2O))*(k_I4_NO2/(k_I4_NO2+S_NO2))*X_H
+Decay of HB									-1	f_1					b_H*X_H
+Anoxic growth of Xpha with nitrate and Sa	((-1-Y_storage)/(1.14*Y_storage))	((1-Y_storage)/(1.14*Y_storage))				(-1)/Y_storage						1			mu_storage*(S_Ac/(k_S1+S_Ac))*(S_NO3/(k_NO3+S_NO3))*(k_I1_NO2/(k_I1_NO2+S_NO2))*X_H
+Anoxic growth of Xpha with Nitrite and Sa		((-1-Y_storage)/(.57*Y_storage))	((1-Y_storage)/(.57*Y_storage))			(-1)/Y_storage						1			mu_storage*(S_Ac/(k_S2+S_Ac))*(S_NO2/(k_NO2+S_NO2))*(k_I2_NO2/(k_I2_NO2+S_NO2))*X_H
+Anoxic growth of Xpha with NO and Sa			((-1-Y_storage)/(.57*Y_storage))	((1-Y_storage)/(.57*Y_storage))		(-1)/Y_storage						1			mu_storage*(S_Ac/(k_S3+S_Ac))*(S_NO/(k_NO+S_NO))*(k_I3_NO2/(k_I3_NO2+S_NO2))*X_H
+Anoxic growth of Xpha with N2O and Sa				((-1-Y_storage)/(.57*Y_storage))	((1-Y_storage)/(.57*Y_storage))	(-1)/Y_storage						1			mu_storage*(S_Ac/(k_S4+S_Ac))*(S_N2O/(k_N2O+S_N2O))*(k_I4_NO2/(k_I4_NO2+S_NO2))*X_H
+Decay of Xpha												-1			b_storage*X_PHA
+Anoxic growth of HB with nitrate and Xpha	((-1-Y_H_sto)/(1.14*Y_H_sto))	((1-Y_H_sto)/(1.14*Y_H_sto))							1			(-1)/Y_H_sto			mu1_hb_xpha*(k_S1/(k_S1+S_Ac))*(S_NO3/(k_NO3+S_NO3))*((X_PHA/X_H)/(k_sto+(X_PHA/X_H)))*(k_I1_NO2/(k_I1_NO2+S_NO2))*X_H
+Anoxic growth of HB with Nitrite and Xpha		((-1-Y_H_sto)/(.57*Y_H_sto))	((1-Y_H_sto)/(.57*Y_H_sto))						1			(-1)/Y_H_sto			mu2_hb_xpha*(k_S2/(k_S2+S_Ac))*(S_NO2/(k_NO2+S_NO2))*((X_PHA/X_H)/(k_sto+(X_PHA/X_H)))*(k_I2_NO2/(k_I2_NO2+S_NO2))*X_H
+Anoxic growth of HB with NO and Xpha			((-1-Y_H_sto)/(.57*Y_H_sto))	((1-Y_H_sto)/(.57*Y_H_sto))					1			(-1)/Y_H_sto			mu3_hb_xpha*(k_S3/(k_S3+S_Ac))*(S_NO/(k_NO+S_NO))*((X_PHA/X_H)/(k_sto+(X_PHA/X_H)))*(k_I3_NO2/(k_I3_NO2+S_NO2))*X_H
+Anoxic growth of HB with N2O and Xpha				((-1-Y_H_sto)/(.57*Y_H_sto))	((1-Y_H_sto)/(.57*Y_H_sto))				1			(-1)/Y_H_sto			mu4_hb_xpha*(k_S4/(k_S4+S_Ac))*(S_N2O/(k_N2O+S_N2O))*((X_PHA/X_H)/(k_sto+(X_PHA/X_H)))*(k_I4_NO2/(k_I4_NO2+S_NO2))*X_H
+PAO_storage_PHA						-1	?	Y_PO4				1		(-Y_PO4)	q_PHA*S_Ac/(k_A+S_Ac)*S_ALK/(k_ALK+S_ALK)*(X_PP/X_PAO)/(k_PP+X_PP/X_PAO)*X_PAO
+aero_storage_PP							?	-1				(-Y_PHA)		1	q_PP*S_O2/(k_O2+S_O2)*S_PO4/(k_PS+S_PO4)*S_ALK/(k_ALK+S_ALK)*(X_PHA/X_PAO)/(k_PHA+X_PHA/X_PAO)*(k_MAX-X_PP/X_PAO)/(k_IPP+k_MAX-X_PP/X_PAO)*X_PAO
+PAO_aero_growth_PHA							?	?				(-1)/Y_PAO	1		mu_PAO*S_O2/(k_O2+S_O2)*S_NH4/(k_NH4+S_NH4)*S_PO4/(k_P+S_PO4)*S_ALK/(k_ALK+S_ALK)*(X_PHA/X_PAO)/(k_PHA+X_PHA/X_PAO)*X_PAO
+PAO_lysis							?	?		f_XI	1-f_XI		-1		b_PAO*X_PAO*S_ALK/(k_ALK+S_ALK)
+PP_lysis							?	1						-1	b_PP*X_PP*S_ALK/(k_ALK+S_ALK)
+PHA_lysis							?					-1			b_PHA*X_PHA*S_ALK/(k_ALK+S_ALK)

@@ -232,23 +232,34 @@ class CANDO3(Processes):
         https://doi.org/10.2166/9781780401164.
     '''
 
-    _params = ('k_H','k_X','mu_H','b_H','nu_H1','nu_H2','nu_H3','nu_H4','k_OH1','k_OH2',
-               'k_OH3','k_OH4','k_OH5','k_S1','k_S2','k_S3','k_S4','k_S5',
-               'k_HB_NO3', 'k_HB_NO2', 'k_HB_NO', 'k_HB_N2O', 'k_HB_I1_NO',
-               'k_HB_I2_NO','k_HB_I3_NO','Y_PHA','Y_PAO','Y_PO4','f_XI','Y_H','f_1','i_NBM','i_NXS','i_PBM','i_NXI',
+    _params = ('mu_H','b_H','mu1_hb_ss','mu2_hb_ss','mu3_hb_ss','mu4_hb_ss',
+               'k_S1','k_S2','k_S3','k_S4','k_NO3','k_NO2','k_NO','k_N2O',
+               'k_I1_NO2','k_I2_NO2','k_I3_NO2','k_I4_NO2','mu_storage',
+               'b_storage','mu1_hb_xpha','mu2_hb_xpha','mu3_hb_xpha','mu4_hb_xpha','k_sto''Y_H','Y_storage','Y_H_sto',
+               
+               'nu_H1','nu_H2','nu_H3','nu_H4','k_OH1','k_OH2',
+               'k_OH3','k_OH4','k_OH5',
+               'k_HB_NO3', 'k_HB_NO2', 'k_HB_NO', 'k_HB_N2O',
+               'Y_PHA','Y_PAO','Y_PO4','f_XI','f_1','i_NBM','i_NXS','i_PBM','i_NXI',
                'b_PAO','b_PP','b_PHA','k_PP','q_PHA','k_A','k_ALK','q_PP','k_PS',
                'k_MAX','k_P','k_IPP','k_O2','k_NO3','k_PHA','n_NO3','mu_PAO','k_NH4')
 
-    def __new__(cls, components=None, k_H=0.125, k_X=1, mu_H=0.26,
-                b_H=0.017,nu_H1=.28,nu_H2=.16,nu_H3=.35,nu_H4=.35,
+    def __new__(cls, components=None,Y_H=.4,Y_storage=.55,Y_H_sto=.67,mu1_hb_ss=4.536,
+                mu2_hb_ss=.864,mu3_hb_ss=3.408,mu4_hb_ss=1.032,b_H=.624,k_S1=5,k_S2=20,k_S3=2.4,k_S4=20,
+                k_NO3=.251,k_NO2=.81,k_NO=.0021,k_N2O=.0052,k_I1_NO2=12,k_I2_NO2=10,k_I3_NO2=17,k_I4_NO2=8,
+                mu_storage=.72,b_storage=.096,mu1_hb_xpha=.792,mu2_hb_xpha=.576,mu3_hb_xpha=3.048,mu4_hb_xpha=.552,
+                k_sto=1,
+                
+                mu_H=5.15,
+                nu_H1=.236,nu_H2=.153,nu_H3=.423,nu_H4=.16,
                 k_OH1=.1, k_OH2=.1, k_OH3=.1, k_OH4=.1, k_OH5=.1,
-                k_S1=20,k_S2=20,k_S3=20,k_S4=20,k_S5=40,k_HB_NO3=.2,
+                k_HB_NO3=.2,
                 k_HB_NO2=.2,k_HB_NO=.05,k_HB_N2O=.05,k_HB_I1_NO=.5,
-                k_HB_I2_NO=.3,k_HB_I3_NO=.075,Y_PHA=.625,Y_PAO=.2,Y_PO4=.3,f_XI=.1,Y_H=.625,i_NXI=.02,
-                f_1=.1,i_NBM=.07,i_NXS=.02,i_PBM=.07,
+                k_HB_I2_NO=.3,k_HB_I3_NO=.075,Y_PHA=.625,Y_PAO=.2,Y_PO4=.3,f_XI=.1,
+                f_1=.1,i_NBM=.07,i_NXS=.02,i_PBM=.07,i_NXI=.02,
                 b_PAO =.2,b_PP=.2,b_PHA=.2,k_PP=.01, 
                 q_PHA=3.0,k_A=4.0,k_ALK=0.1,q_PP=1.5,k_PS=0.2,k_MAX=0.34,k_P=.01,
-                k_IPP=0.02,k_O2=0.2, k_NO3=0.5,k_PHA=0.01,n_NO3=.6,mu_PAO=1,k_NH4=.05,
+                k_IPP=0.02,k_O2=0.2, k_PHA=0.01,n_NO3=.6,mu_PAO=1,k_NH4=.05,
                 fr_SS_COD=0.75, path=None, **kwargs):
         if not path: path = _path
         
@@ -259,7 +270,7 @@ class CANDO3(Processes):
         
         # Added 'P' to conserved_for
         self = Processes.load_from_file(path,
-                                        conserved_for=('COD', 'charge', 'N', 'P'),
+                                        conserved_for=( 'charge', 'P'),
                                         parameters=cls._params,
                                         components=cmps,
                                         compile=False)
@@ -284,10 +295,15 @@ class CANDO3(Processes):
 
         self.compile()
 
-        self.set_parameters(k_H=k_H,k_X=k_X,mu_H=mu_H,b_H=b_H,nu_H1=nu_H1,nu_H2=nu_H2,
+        self.set_parameters(Y_storage=Y_storage,Y_H_sto=Y_H_sto,mu1_hb_ss=mu1_hb_ss,mu2_hb_ss=mu2_hb_ss,
+                            mu3_hb_ss=mu3_hb_ss,mu4_hb_ss=mu4_hb_ss,b_H=b_H,k_NO2=k_NO2, k_NO=k_NO,k_N2O=k_N2O,
+                            k_I1_NO2=k_I1_NO2,k_I2_NO2=k_I2_NO2,k_I3_NO2=k_I3_NO2,k_I4_NO2=k_I4_NO2,
+                            mu_storage=mu_storage,b_storage=b_storage,mu1_hb_xpha=mu1_hb_xpha,mu2_hb_xpha=mu2_hb_xpha,
+                            mu3_hb_xpha=mu3_hb_xpha,mu4_hb_xpha=mu4_hb_xpha,k_sto=k_sto,
+            mu_H=mu_H,nu_H1=nu_H1,nu_H2=nu_H2,
                             nu_H3=nu_H3,nu_H4=nu_H4,k_OH1=k_OH1,k_OH2=k_OH2,k_OH3=k_OH3,
                             k_OH4=k_OH4,k_OH5=k_OH5,k_S1=k_S1,k_S2=k_S2,k_S3=k_S3,k_S4=k_S4,
-                            k_S5=k_S5,k_HB_NO3=k_HB_NO3,k_HB_NO2=k_HB_NO2,k_HB_NO=k_HB_NO,
+                            k_HB_NO3=k_HB_NO3,k_HB_NO2=k_HB_NO2,k_HB_NO=k_HB_NO,
                             k_HB_N2O=k_HB_N2O,k_HB_I1_NO=k_HB_I1_NO,k_HB_I2_NO=k_HB_I2_NO,
                             k_HB_I3_NO=k_HB_I3_NO,Y_PHA=Y_PHA,Y_PAO=Y_PAO,Y_PO4=Y_PO4,f_XI=f_XI,
                             Y_H=Y_H,b_PAO=b_PAO,b_PP=b_PP,b_PHA=b_PHA,k_PP=k_PP,q_PHA=q_PHA,
