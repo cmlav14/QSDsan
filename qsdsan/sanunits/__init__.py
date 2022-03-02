@@ -30,9 +30,10 @@ from ._sludge_thickening import *
 from ._suspended_growth_bioreactor import *
 from ._tanks import *
 from ._trucking import *
+from ._encapsulation_bioreactor import *
 
 # Units that rely on other units
-from ._activated_sludge import *
+from ._activated_sludge_process import *
 from ._anaerobic_reactors import *
 from ._internal_circulation_rx import *
 from ._lagoon import *
@@ -46,7 +47,7 @@ from ._treatment_beds import *
 # From then on the order doesn't matter, listed alphabetically
 from . import (
     _abstract,
-    _activated_sludge,
+    _activated_sludge_process,
     _anaerobic_reactors,
     _clarifier,
     _combustion,
@@ -54,6 +55,7 @@ from . import (
     _decay,
     _dynamic_influent,
     _electrochemical_cell,
+    _encapsulation_bioreactor,
     _excretion,
     _hx,
     _internal_circulation_rx,
@@ -74,7 +76,7 @@ from . import (
 
 __all__ = (
     *_abstract.__all__,
-    *_activated_sludge.__all__,
+    *_activated_sludge_process.__all__,
     *_anaerobic_reactors.__all__,
     *_clarifier.__all__,
     *_combustion.__all__,
@@ -82,6 +84,7 @@ __all__ = (
     *_decay.__all__,
     *_dynamic_influent.__all__,
     *_electrochemical_cell.__all__,
+    *_encapsulation_bioreactor.__all__,
     *_excretion.__all__,
     *_hx.__all__,
     *_internal_circulation_rx.__all__,
