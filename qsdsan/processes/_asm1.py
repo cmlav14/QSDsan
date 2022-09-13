@@ -12,17 +12,16 @@ for license details.
 
 from thermosteam.utils import chemicals_user
 from thermosteam import settings
-from qsdsan import Components, Processes, _pk
-from ..utils import ospath, data_path, save_pickle, load_pickle
+from qsdsan import Components, Processes, CompiledProcesses
+from ..utils import ospath, data_path
 
-__all__ = ('load_asm1_cmps', 'ASM1')
+__all__ = ('create_asm1_cmps', 'ASM1')
 
 _path = ospath.join(data_path, 'process_data/_asm1.tsv')
-_path_cmps = ospath.join(data_path, '_asm1_cmps.pckl')
 _load_components = settings.get_default_chemicals
 
 ############# Components with default notation #############
-def create_asm1_cmps(pickle=False):
+def create_asm1_cmps(set_thermo=True):
     cmps = Components.load_default()
 
     S_I = cmps.S_U_Inf.copy('S_I')
@@ -60,7 +59,6 @@ def create_asm1_cmps(pickle=False):
     S_NO.description = 'Nitrate and nitrite nitrogen'
 
     S_NH = cmps.S_NH4.copy('S_NH')
-
     S_ND = cmps.S_F.copy('S_ND')
     S_ND.description = 'Soluble biodegradable organic nitrogen'
     S_ND.measured_as = 'N'
@@ -80,21 +78,11 @@ def create_asm1_cmps(pickle=False):
                             S_O, S_NO, S_NH, S_ND, X_ND, S_ALK,
                             cmps.S_N2, cmps.H2O])
     cmps_asm1.compile()
+    if set_thermo: settings.set_thermo(cmps_asm1)
 
-    if pickle:
-        save_pickle(cmps_asm1, _path_cmps)
     return cmps_asm1
-_create_asm1_cmps = create_asm1_cmps
 
-
-#create_asm1_cmps(True)
-
-def load_asm1_cmps():
-    if _pk:
-        return load_pickle(_path_cmps)
-    else:
-        return create_asm1_cmps(pickle=False)
-
+# create_asm1_cmps()
 
 
 ############ Processes in ASM1 #################
@@ -151,7 +139,7 @@ def load_asm1_cmps():
 #     )
 
 @chemicals_user
-class ASM1(Processes):
+class ASM1(CompiledProcesses):
     '''
     Activated Sludge Model No. 1 in original notation. [1]_, [2]_
 
@@ -213,11 +201,10 @@ class ASM1(Processes):
     Examples
     --------
     >>> from qsdsan import processes as pc, set_thermo
-    >>> cmps = pc.load_asm1_cmps()
-    >>> set_thermo(cmps)
+    >>> cmps = pc.create_asm1_cmps()
     >>> asm1 = pc.ASM1()
     >>> asm1.show()
-    CompiledProcesses([aero_growth_hetero, anox_growth_hetero, aero_growth_auto, decay_hetero, decay_auto, ammonification, hydrolysis, hydrolysis_N])
+    ASM1([aero_growth_hetero, anox_growth_hetero, aero_growth_auto, decay_hetero, decay_auto, ammonification, hydrolysis, hydrolysis_N])
 
     References
     ----------
@@ -252,7 +239,8 @@ class ASM1(Processes):
                                         conserved_for=('COD', 'charge', 'N'),
                                         parameters=cls._params,
                                         components=cmps,
-                                        compile=True)
+                                        compile=False)
+        self.compile(to_class=cls)
 
         self.set_parameters(Y_A=Y_A, Y_H=Y_H, f_P=f_P, mu_H=mu_H, K_S=K_S, K_O_H=K_O_H,
                             K_NO=K_NO, b_H=b_H, eta_g=eta_g, eta_h=eta_h, k_h=k_h,

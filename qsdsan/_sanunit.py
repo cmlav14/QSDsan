@@ -5,7 +5,7 @@
 QSDsan: Quantitative Sustainable Design for sanitation and resource recovery systems
 
 This module is developed by:
-    Yalin Li <zoe.yalin.li@gmail.com>
+    Yalin Li <mailto.yalin.li@gmail.com>
     Joy Zhang <joycheung1994@gmail.com>
 
 Part of this module is based on the BioSTEAM package:
@@ -102,7 +102,7 @@ class SanUnit(Unit, isabstract=True):
         :class:`~.Transportation` with transportation information.
     equipments: Iterable(obj)
         :class:`~.Equipment` with equipment information.
-    add_OPEX : float or dict
+    add_OPEX : float/int or dict
         Operating expense per hour in addition to utility cost (assuming 100% uptime).
         Float input will be automatically converted to a dict with the key being
         "Additional OPEX".
@@ -134,6 +134,11 @@ class SanUnit(Unit, isabstract=True):
 
             Regardless of `F_BM_default`, design (F_D), pressure (F_P),
             and material (F_M) factors are all defaulted to 1.
+
+    isdynamic : bool
+        If this unit is simulated dynamically with rate equations.
+    kwargs : dict
+        Additional keyword arguments that can be set for this unit.
 
     See Also
     --------
@@ -229,7 +234,7 @@ class SanUnit(Unit, isabstract=True):
             self._mock_dyn_sys = System(self.ID+'_dynmock', path=(self,))
         if not hasattr(self, '_state_header'):
             self._state_header = [f'{cmp.ID} [mg/L]' for cmp in self.components] + ['Q [m3/d]']
-        # Shouldn't need to re-create the mock system everytime
+        # Shouldn't need to re-create the mock system every time
         # if hasattr(self, '_mock_dyn_sys'):
         #     sys = self._mock_dyn_sys
         #     sys.registry.discard(sys)
@@ -342,7 +347,7 @@ class SanUnit(Unit, isabstract=True):
         See Also
         --------
         :func:`~.System.simulate`
-        
+
         `scipy.integrate.solve_ivp <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html>`_
         '''
         super().simulate()
@@ -437,10 +442,10 @@ class SanUnit(Unit, isabstract=True):
         if not hasattr(self, '_scope'):
             self._scope = SanUnitScope(self)
         return self._scope
-    
+
     @scope.setter
     def scope(self, s):
-        if not isinstance(s, Scope): 
+        if not isinstance(s, Scope):
             raise TypeError(f'{s} must be an {Scope} not {type(s)}.')
         if self is not s.subject:
             raise ValueError(f'The subject of {s} must be {self} not {s.subject}.')
@@ -524,12 +529,12 @@ class SanUnit(Unit, isabstract=True):
         Float input will be automatically converted to a dict with the key being
         "Additional OPEX".
         '''
-        return {'Additional OPEX': self._add_OPEX} if isinstance(self._add_OPEX, float) \
+        return {'Additional OPEX': self._add_OPEX} if isinstance(self._add_OPEX, (float, int)) \
             else self._add_OPEX
     @add_OPEX.setter
     def add_OPEX(self, i):
         isa = isinstance
-        if isa(i, float):
+        if isa(i, (float, int)):
             i = {'Additional OPEX': i}
         if not isa(i, dict):
             raise TypeError(
@@ -573,8 +578,8 @@ class SanUnit(Unit, isabstract=True):
     @uptime_ratio.setter
     def uptime_ratio(self, i):
         if not 0 <=i<= 1:
-            raise ValueError(f'Uptime must be between 0 and 1 (100%), not {i}.')
-        self._uptime_ratio = float(i)
+            warn(f'`uptime_ratio` of {i:.2f} for unit {self.ID} is not in 0 and 1 (100%).')
+        self._uptime_ratio = i
 
     @property
     def lifetime(self):

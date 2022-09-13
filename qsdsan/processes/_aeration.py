@@ -70,16 +70,16 @@ class DiffusedAeration(Process):
     Examples
     --------
     >>> from qsdsan import processes as pc, set_thermo
-    >>> cmps = pc.load_asm1_cmps()
-    >>> set_thermo(cmps)
+    >>> cmps = pc.create_asm1_cmps()
     >>> aer = pc.DiffusedAeration('aer', 'S_O', KLa=240, DOsat=8.0, V=1333)
     >>> aer.show()
     Process: aer
-    [stoichiometry] S_O: 1
-    [reference]     S_O
-    [rate equation] KLa*(DOsat - S_O)
-    [parameters]    KLa: 240
-                    DOsat: 8
+    [stoichiometry]      S_O: 1
+    [reference]          S_O
+    [rate equation]      KLa*(DOsat - S_O)
+    [parameters]         KLa: 240
+                         DOsat: 8
+    [dynamic parameters]
     """
 
 

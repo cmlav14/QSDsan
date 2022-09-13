@@ -5,26 +5,11 @@
 QSDsan: Quantitative Sustainable Design for sanitation and resource recovery systems
 
 This module is developed by:
-    Yalin Li <zoe.yalin.li@gmail.com>
+    Yalin Li <mailto.yalin.li@gmail.com>
 
 This module is under the University of Illinois/NCSA Open Source License.
 Please refer to https://github.com/QSD-Group/QSDsan/blob/main/LICENSE.txt
 for license details.
-'''
-
-'''
-TODO:
-    - Add algorithms for other configurations
-    (AF, submerged, sparging, GAC, flat sheet, hollow fiber)
-    - Maybe add AeMBR as well (make an MBR superclass)
-        - AeMBR can use higher flux and allows for lower transmembrane pressure
-
-References
-----------
-[1] Shoener et al., Design of Anaerobic Membrane Bioreactors for the
-Valorization of Dilute Organic Carbon Waste Streams.
-Energy Environ. Sci. 2016, 9 (3), 1102–1112.
-https://doi.org/10.1039/C5EE03715H.
 '''
 
 from math import ceil, floor
@@ -53,13 +38,10 @@ _cmh_to_mgd = _m3_to_gal * 24 / 1e6 # cubic meter per hour to million gallon per
 _lb_to_kg = auom('lb').conversion_factor('kg')
 
 F_BM_pump = 1.18*(1+0.007/100) # 0.007 is for miscellaneous costs
-#!!! Take out the blower-related ones once finish updating the equipment
 default_F_BM = {
         'Membrane': 1+0.15, # assume 15% for replacement labor
         'Pumps': F_BM_pump,
         'Pump building': F_BM_pump,
-#        'Blowers': 2.11,
-#        'Blower building': 1.11,
         }
 default_equipment_lifetime = {
     'Membrane': 10,
@@ -67,7 +49,6 @@ default_equipment_lifetime = {
     'Pump pipe stainless steel': 15,
     'Pump stainless steel': 15,
     'Pump chemical storage HDPE': 30,
-#    'Blowers': 15,
     }
 
 
@@ -83,6 +64,10 @@ class AnMBR(SanUnit):
 
     Parameters
     ----------
+    ins : Inlets(obj)
+        Influent, recycle (optional), naocl, citric acid, bisulfite, air (optional).
+    outs : Outlets(obj)
+        Biogas, effluent, waste sludge, air (optional).
     reactor_type : str
         Can either be "CSTR" for continuous stirred tank reactor
         or "AF" for anaerobic filter.
@@ -110,12 +95,14 @@ class AnMBR(SanUnit):
     include_degassing_membrane : bool
         If to include a degassing membrane to enhance methane
         (generated through the digestion reaction) recovery.
+    Y_biogas : float
+        Biogas yield, [kg biogas/kg consumed COD].
+    Y_biomass : float
+        Biomass yield, [kg biomass/kg consumed COD].
     biodegradability : float or dict
         Biodegradability of components,
         when shown as a float, all biodegradable components are assumed to have
         the same degradability.
-    Y : float
-        Biomass yield, [kg biomass/kg consumed COD].
     solids : Iterable(str)
         IDs of the solid components.
         If not provided, will be set to the default `solids` attribute of the components.
@@ -148,6 +135,14 @@ class AnMBR(SanUnit):
         Hydrolysis of Corn Stover; Technical Report NREL/TP-5100-47764;
         National Renewable Energy Lab (NREL), 2011.
         https://www.nrel.gov/docs/fy11osti/47764.pdf
+
+    .. note::
+
+        TODO
+            - Add algorithms for other configurations (AF, submerged, sparging, GAC, flat sheet, hollow fiber)
+            - Maybe add AeMBR as well (and make an MBR superclass)
+            
+                - AeMBR can use higher flux and allows for lower transmembrane pressure
 
     See Also
     --------
@@ -254,7 +249,9 @@ class AnMBR(SanUnit):
                  include_aerobic_filter=False,
                  add_GAC=False,
                  include_degassing_membrane=True,
-                 biodegradability=1.0, Y=0.05, # from the 0.02-0.08 uniform range in ref [1]
+                 Y_biogas = 0.86,
+                 Y_biomass=0.05, # from the 0.02-0.08 uniform range in ref [1]
+                 biodegradability=1.0,
                  solids=(), split={},
                  biomass_ID='WWTsludge', solids_conc=10.5,
                  T=35+273.15,
@@ -272,7 +269,8 @@ class AnMBR(SanUnit):
         self.add_GAC = add_GAC
         self.include_degassing_membrane = include_degassing_membrane
         self.biodegradability = biodegradability
-        self.Y = Y
+        self.Y_biogas = Y_biogas
+        self.Y_biomass = Y_biomass
         cmps = self.components
         self.split = split if split else default_component_dict(
             cmps=cmps, gas=0.15, solubles=0.125, solids=0) # ref[2]
@@ -922,7 +920,7 @@ class AnMBR(SanUnit):
 
     @property
     def N_mod_tot(self):
-        '''[int] Total number of memberane modules.'''
+        '''[int] Total number of membrane modules.'''
         return self.N_train * self.cas_per_tank * self.mod_per_cas
 
     @property
@@ -1271,19 +1269,19 @@ class AnMBR(SanUnit):
         return self._biodegradability
     @biodegradability.setter
     def biodegradability(self, i):
-        if isinstance(i, float):
+        if not isinstance(i, dict):
             if not 0<=i<=1:
                 raise ValueError('`biodegradability` should be within [0, 1], '
                                  f'the input value {i} is outside the range.')
-            self._biodegradability = i
-            return
-
-        for k, v in i.items():
-            if not 0<=v<=1:
-                raise ValueError('`biodegradability` should be within [0, 1], '
-                                 f'the input value for component "{k}" is '
-                                 'outside the range.')
-        self._biodegradability = i
+            self._biodegradability = dict.fromkeys(self.chemicals.IDs, i)
+        else:
+            for k, v in i.items():
+                if not 0<=v<=1:
+                    raise ValueError('`biodegradability` should be within [0, 1], '
+                                     f'the input value for chemical "{k}" is '
+                                     'outside the range.')
+            self._biodegradability = dict.fromkeys(self.chemicals.IDs, i).update(i)
+        self._refresh_rxns()
 
     @property
     def biomass_ID(self):
@@ -1300,17 +1298,6 @@ class AnMBR(SanUnit):
     @solids_conc.setter
     def solids_conc(self, i):
         self._solids_conc = i
-
-    @property
-    def Y(self):
-        '''[float] Biomass yield, [kg biomass/kg consumed COD].'''
-        return self._Y
-    @Y.setter
-    def Y(self, i):
-        if not 0 <= i <= 1:
-            raise ValueError('`Y` should be within [0, 1], '
-                             f'the input value {i} is outside the range.')
-        self._Y = i
 
     @property
     def i_rm(self):

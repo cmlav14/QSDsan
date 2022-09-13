@@ -5,7 +5,7 @@
 QSDsan: Quantitative Sustainable Design for sanitation and resource recovery systems
 
 This module is developed by:
-    Yalin Li <zoe.yalin.li@gmail.com>
+    Yalin Li <mailto.yalin.li@gmail.com>
 
 This module is under the University of Illinois/NCSA Open Source License.
 Please refer to https://github.com/QSD-Group/QSDsan/blob/main/LICENSE.txt
@@ -45,18 +45,18 @@ def sum_system_utility(system, operating_hours=None, exclude_units=(),
 
     Examples
     --------
-    >>> from qsdsan.utils import load_example_cmps, load_example_sys, sum_system_utility
-    >>> sys = load_example_sys(load_example_cmps())
+    >>> from qsdsan.utils import load_example_components, load_example_system, sum_system_utility
+    >>> sys = load_example_system(load_example_components())
     >>> sys.simulate()
-    >>> sum_system_utility(sys, utility='heating', result_unit='kJ/yr') # doctest: +NUMBER
-    463359.8752661339
+    >>> sum_system_utility(sys, utility='heating', result_unit='kJ/yr') # doctest: +ELLIPSIS
+    463359.875...
     >>> sum_system_utility(sys, utility='cooling', result_unit='GJ/yr') # doctest: +NUMBER
     0.0
     >>> # Exclude a certain unit
-    >>> sum_system_utility(sys, utility='power') # doctest: +NUMBER
-    8026.734351097134
-    >>> sum_system_utility(sys, utility='power', exclude_units=(sys.units[0],)) # doctest: +NUMBER
-    5795.725960018872
+    >>> sum_system_utility(sys, utility='power') # doctest: +ELLIPSIS
+    8026.73435...
+    >>> sum_system_utility(sys, utility='power', exclude_units=(sys.units[0],)) # doctest: +ELLIPSIS
+    5795.72596...
     '''
 
     hrs = operating_hours or getattr(system, 'operating_hours') or 1.

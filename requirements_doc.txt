@@ -1,18 +1,18 @@
 # Needed by qsdsan
-git+https://github.com/BioSTEAMDevelopmentGroup/thermosteam.git
-git+https://github.com/BioSTEAMDevelopmentGroup/biosteam.git@dyn_sim
-biosteam>=2.32.2
-thermosteam>=0.28.4
+git+https://github.com/BioSTEAMDevelopmentGroup/thermosteam.git@qsdsan
+git+https://github.com/BioSTEAMDevelopmentGroup/biosteam.git@qsdsan
+biosteam==2.32.18
+thermosteam==0.28.13
 SALib
 seaborn
 sympy
 
 # Specifically for docs
 sphinx
-nbsphinx
-sphinx_rtd_theme
-sphinx_rtd_dark_mode
 sphinx-copybutton
+sphinx-design
+furo
+nbsphinx
 ipywidgets
 jupyterlab-widgets
 widgetsnbextension
